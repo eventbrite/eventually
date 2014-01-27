@@ -62,14 +62,21 @@ def run_all_metrics(cli_options, metrics, paths):
         program = metrics.get(section_title, 'program')
         cwd = _normalize_path(
             metrics.get(section_title, 'cwd'), paths)
-        print section_title + ':', run_metric(program, cwd)
+        value = run_metric(program, cwd)
         # If the section has targets, print that too.
-        if (metrics.get(section_title, 'target_value') and
-            metrics.get(section_title, 'target_date')):
+        if (metrics.has_option(section_title, 'target_value') and
+            metrics.has_option(section_title, 'target_date') and
+            metrics.has_option(section_title, 'start_date') and
+            metrics.has_option(section_title, 'start_value')):
+            print section_title + ':', value,  '(was:', metrics.get(
+                section_title, 'start_value'), 'on', metrics.get(
+                section_title, 'start_date') + ')'
             print section_title, '(target_value):', metrics.get(
-                section_title, 'target_value')
+                    section_title, 'target_value')
             print section_title, '(target_date):', metrics.get(
                 section_title, 'target_date')
+        else:
+            print section_title + ':', value
 
 
 def list_metrics(metrics):
