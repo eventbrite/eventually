@@ -32,8 +32,6 @@ def run_metric(program, cwd):
 
 def main():
     metrics, paths = get_config()
-    print metrics
-    print paths
 
     for section_title in metrics.sections():
         program = metrics.get(section_title, 'program')
