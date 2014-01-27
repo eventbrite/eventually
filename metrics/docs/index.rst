@@ -6,11 +6,6 @@
 Generating and tracking metrics for code
 ========================================
 
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-
 This package exists to help us set and measure progress toward code
 quality goals. Ideas to get your mind flowing:
 
