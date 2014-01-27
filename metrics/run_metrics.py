@@ -31,19 +31,45 @@ def run_metric(program, cwd):
         shell=True).strip()
 
 
-def create_option_parser():
+def create_option_parser(metrics):
     parser = optparse.OptionParser()
     parser.add_option('--list', help='List known metrics, then exit.',
                       action='store_true')
+    for section_title in metrics.sections():
+        parser.add_option('--' + section_title,
+                          help='Just run %s' % (section_title,),
+                          action='store_true',
+                          default=None)
     return parser
 
 
-def run_all_metrics(metrics, paths):
+def run_all_metrics(cli_options, metrics, paths):
+    # Find out if the user asked to run a particular one
+    run_just_these = []
     for section_title in metrics.sections():
+        if cli_options.get(section_title):
+            run_just_these.append(section_title)
+
+    # Either run the specific ones we were asked about, or else run
+    # all of them.
+    if run_just_these:
+        run_these = run_just_these
+    else:
+        run_these = metrics.sections()
+
+    # Then run them
+    for section_title in run_these:
         program = metrics.get(section_title, 'program')
         cwd = _normalize_path(
             metrics.get(section_title, 'cwd'), paths)
         print section_title + ':', run_metric(program, cwd)
+        # If the section has targets, print that too.
+        if (metrics.get(section_title, 'target_value') and
+            metrics.get(section_title, 'target_date')):
+            print section_title, '(target_value):', metrics.get(
+                section_title, 'target_value')
+            print section_title, '(target_date):', metrics.get(
+                section_title, 'target_date')
 
 
 def list_metrics(metrics):
@@ -52,19 +78,19 @@ def list_metrics(metrics):
 
 
 def main():
-    parser = create_option_parser()
+    # Do the required setup.
+    metrics, paths = get_config()
+
+    parser = create_option_parser(metrics)
 
     # If the user passed '-h', parser.parse_args()
     # will take care of printing help.
     opts, args = parser.parse_args()
 
-    # Do the required setup.
-    metrics, paths = get_config()
-
     if opts.list:
         return list_metrics(metrics)
 
-    run_all_metrics(metrics, paths)
+    run_all_metrics(vars(parser.values), metrics, paths)
 
 
 if __name__ == '__main__':
