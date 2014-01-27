@@ -158,3 +158,6 @@ Here are the things this tool does not do yet:
   department needs to stop adding new code that uses old-style
   database calls," rather than just "These particular engineers in
   Bob's team need to fix things."
+
+* Silencing warnings. This (for now) is best-handled by the scripts
+  that we call-out to.
