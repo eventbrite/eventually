@@ -57,12 +57,3 @@ and the `paths.cfg` configuration would be::
 
  [paths]
  EVENTBRITECORE = ~/work/eventbritecore
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
