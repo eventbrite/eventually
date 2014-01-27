@@ -132,3 +132,29 @@ Once you reach success on a goal, we recommend:
 
 * Deleting the metric from your metrics.cfg file, since you no longer need it.
 
+
+Known deficiencies
+==================
+
+Here are the things this tool does not do yet:
+
+* Store the results over time. For example, if you and the team
+  want to remove 2000 lines of code in the next 3 months, it could
+  be motivating to see a graph of how this has progressed. However,
+  this does not do that.
+
+* Let you check just subsets of the code. This could be useful for a
+  version of the tool that integrates with developers' workflow, so
+  that if some of the checks are expensive, they can be run on just
+  the files that a developer has modified.
+
+* Let you identify which people need to make the changes that the tool
+  suggests. One way to do this will be via `git blame -w`, if the
+  metrics can be provided on a line-by-line basis.
+
+* Let you identify which groups within the team are responsible for
+  making sure the changes happen. It can be nice to move up the
+  management hierarchy so that we can say, "Bob's engineering
+  department needs to stop adding new code that uses old-style
+  database calls," rather than just "These particular engineers in
+  Bob's team need to fix things."
