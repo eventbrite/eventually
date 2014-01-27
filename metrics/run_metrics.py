@@ -1,4 +1,5 @@
 import ConfigParser
+import optparse
 import os.path
 import subprocess
 
@@ -30,14 +31,41 @@ def run_metric(program, cwd):
         shell=True).strip()
 
 
-def main():
-    metrics, paths = get_config()
+def create_option_parser():
+    parser = optparse.OptionParser()
+    parser.add_option('--list', help='List known metrics, then exit.',
+                      action='store_true')
+    return parser
 
+
+def run_all_metrics(metrics, paths):
     for section_title in metrics.sections():
         program = metrics.get(section_title, 'program')
         cwd = _normalize_path(
             metrics.get(section_title, 'cwd'), paths)
-        print run_metric(program, cwd)
+        print section_title + ':', run_metric(program, cwd)
+
+
+def list_metrics(metrics):
+    for section_title in metrics.sections():
+        print section_title
+
+
+def main():
+    parser = create_option_parser()
+
+    # If the user passed '-h', parser.parse_args()
+    # will take care of printing help.
+    opts, args = parser.parse_args()
+
+    # Do the required setup.
+    metrics, paths = get_config()
+
+    if opts.list:
+        return list_metrics(metrics)
+
+    run_all_metrics(metrics, paths)
+
 
 if __name__ == '__main__':
     main()
