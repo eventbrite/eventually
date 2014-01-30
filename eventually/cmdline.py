@@ -3,17 +3,16 @@ import optparse
 import os.path
 import subprocess
 
-METRICS_CONFIG_FILENAME = 'metrics.conf'
+METRICS_CONFIG_FILENAME = 'eventually.conf'
 PATHS_CONFIG_FILENAME = 'paths.conf'
 
 
-def get_config():
+def get_config(base_dir):
     metrics = ConfigParser.SafeConfigParser()
     paths = ConfigParser.SafeConfigParser()
-    # FIXME: Use smart path to these files, not just
-    # hoping that CWD is the right answer.
-    metrics.read(METRICS_CONFIG_FILENAME)
-    paths.read(PATHS_CONFIG_FILENAME)
+    base_dir = os.path.abspath(base_dir) + os.path.sep
+    metrics.read(os.path.join(base_dir, METRICS_CONFIG_FILENAME))
+    paths.read(os.path.join(base_dir, PATHS_CONFIG_FILENAME))
     return metrics, paths
 
 
@@ -35,6 +34,12 @@ def create_option_parser(metrics):
     parser = optparse.OptionParser()
     parser.add_option('--list', help='List known metrics, then exit.',
                       action='store_true')
+    parser.add_option(
+        '-d',
+        '--dir',
+        help='Directory from which to read configuration [default: %default]',
+        type='string',
+        default='./')
     for section_title in metrics.sections():
         parser.add_option('--' + section_title,
                           help='Just run %s' % (section_title,),
@@ -86,13 +91,17 @@ def list_metrics(metrics):
 
 def main():
     # Do the required setup.
-    metrics, paths = get_config()
+    metrics, paths = get_config(base_dir='.')
 
     parser = create_option_parser(metrics)
 
     # If the user passed '-h', parser.parse_args()
     # will take care of printing help.
     opts, args = parser.parse_args()
+
+    # Re-do configuration getting, now that we have a base
+    # directory.
+    metrics, paths = get_config(vars(parser.values)['dir'])
 
     if opts.list:
         return list_metrics(metrics)
