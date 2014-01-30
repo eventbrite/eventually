@@ -3,8 +3,8 @@ import optparse
 import os.path
 import subprocess
 
-METRICS_CONFIG_FILENAME = 'metrics.cfg'
-PATHS_CONFIG_FILENAME = 'paths.cfg'
+METRICS_CONFIG_FILENAME = 'metrics.conf'
+PATHS_CONFIG_FILENAME = 'paths.conf'
 
 
 def get_config():
