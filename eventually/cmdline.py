@@ -24,10 +24,10 @@ def _normalize_path(normalize_me, paths):
 
 
 def run_metric(program, cwd):
-    return subprocess.check_output(
-        program,
-        cwd=cwd,
-        shell=True).strip()
+    p = subprocess.Popen(program, cwd=cwd, stdout=subprocess.PIPE, shell=True)
+    output, _ = p.communicate()
+    output = output or ''
+    return output.strip()
 
 
 def create_option_parser(metrics):

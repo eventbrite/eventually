@@ -23,13 +23,12 @@ setup(name='eventually',
       author_email='asheesh@eventbrite.com',
       url='https://github.com/eventbrite/eventually',
       packages=find_packages(),
-      package_dir={'': 'src'},
       include_package_data=True,
       zip_safe=True,
       install_requires=install_requires,
       entry_points={
-          'eventually': [
-              'eventually.cmdline:main',
+          'console_scripts': [
+              'eventually=eventually.cmdline:main',
           ],
       },
 )
